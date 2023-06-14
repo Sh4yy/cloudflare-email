@@ -1,8 +1,12 @@
-# Cloudflare Worker Email Server
+<div align="center">
+	<img src="https://github.com/Sh4yy/cloudflare-email/assets/23535123/36a28753-7ded-45ef-bfed-fcc308658b33" alt="Cloudflare Worker Email Server"/>
+	<br>
+  <h1>Cloudflare Worker Email Server</h1>
+	<p>Send free transactional emails from your Cloudflare Workers using MailChannels.</p>
+</div>
 
-This is a simple email proxy server that you can deploy to Cloudflare Workers to send free transactional emails using the [Cloudflare and MailChannels partnership](https://blog.cloudflare.com/sending-email-from-workers-with-mailchannels/).
 
-## Getting Started
+## Getting Started!
 
 1. Clone this repository
 2. Install the dependencies with `npm install`
