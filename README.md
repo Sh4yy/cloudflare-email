@@ -13,6 +13,10 @@
 3. Add a random `TOKEN` to the `wrangler.toml` file (this will be used to authenticate your requests)
 4. Deploy the worker with `npm run deploy`
 
+Or deploy directly to cloudflare
+
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Sh4yy/cloudflare-email)
+
 ## Setup SPF
 
 SPF is a DNS record that helps prevent email spoofing. You will need to add an SPF record to your domain to allow MailChannels to send emails on your behalf.
