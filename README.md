@@ -25,6 +25,10 @@ SPF is a DNS record that helps prevent email spoofing. You will need to add an S
 		- Name: `@`
 		- Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
 
+## Setup DKIM
+
+This step is optional, but highly recommended. DKIM is a DNS record that helps prevent email spoofing. You may follow the steps listed in the [MailChannels documentation](https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature) to set up DKIM for your domain.
+
 ## Usage
 
 Once you have deployed this worker function to Cloudflare Workers, you can send emails by making a `POST` request to the worker on the `/api/email` endpoint with the following parameters:
@@ -59,7 +63,7 @@ You can also send HTML emails by adding an `html` parameter to the request. This
 
 ### Sender and Recipient Name
 
-You can also specify a sender and recipient name by adding a `name` parameter to the request. This can be used in conjunction with the `to` and `from` parameters.
+You can also specify a sender and recipient name by adding a `name` parameter to the request. This can be used for both the `to` and `from` parameters.
 
 ```json
 {
