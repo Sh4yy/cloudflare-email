@@ -1,0 +1,127 @@
+# Cloudflare Worker Email Server
+
+This is a simple email proxy server that you can deploy to Cloudflare Workers to send free transactional emails using the [Cloudflare and MailChannels partnership](https://blog.cloudflare.com/sending-email-from-workers-with-mailchannels/).
+
+## Getting Started
+
+1. Clone this repository
+2. Install the dependencies with `npm install`
+3. Add a random `TOKEN` to the `wrangler.toml` file (this will be used to authenticate your requests)
+4. Deploy the worker with `npm run deploy`
+
+## Setup SPF
+
+SPF is a DNS record that helps prevent email spoofing. You will need to add an SPF record to your domain to allow MailChannels to send emails on your behalf.
+
+1. Add a `TXT` record to your domain with the following values:
+		- Name: `@`
+		- Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
+
+## Usage
+
+Once you have deployed this worker function to Cloudflare Workers, you can send emails by making a `POST` request to the worker on the `/api/email` endpoint with the following parameters:
+
+- Note you need to pass an `Authorization` header with the `TOKEN` you set in the `wrangler.toml` file. Like the following: `Authorization: TOKEN`
+
+### Basic Email
+
+The Most basic request would look like this:
+
+```json
+{
+	"to": "john@example.com",
+	"from": "me@example.com",
+	"subject": "Hello World",
+	"text": "Hello World"
+}
+```
+
+### HTML Emails
+
+You can also send HTML emails by adding an `html` parameter to the request. This can be used in conjunction with the `text` parameter to send a multi-part email.
+
+```json
+{
+	"to": "john@example.com",
+	"from": "me@example.com",
+	"subject": "Hello World",
+	"html": "<h1>Hello World</h1>"
+}
+```
+
+### Sender and Recipient Name
+
+You can also specify a sender and recipient name by adding a `name` parameter to the request. This can be used in conjunction with the `to` and `from` parameters.
+
+```json
+{
+	"to": { "email": "john@example.com",  "name": "John Doe" },
+	"from": { "email": "me@example.com", "name": "Jane Doe" },
+	"subject": "Hello World",
+	"text": "Hello World"
+}
+```
+
+### Sending to Multiple Recipients
+
+You may also send to multiple recipients by passing an array of eamils, or an array of objects with `email` and `name` properties.
+
+```json
+{
+	"to": [
+		"john@example.com",
+		"rose@example.com"
+ 	],
+	"from": "me@example.com",
+	"subject": "Hello World",
+	"text": "Hello World"
+}
+```
+
+or
+
+```json
+{
+	"to": [
+		{ "email": "john@example.com", "name": "John Doe" },
+		{ "email": "rose@example.com", "name": "Rose Doe" }
+ 	],
+	"from": "me@example.com",
+	"subject": "Hello World",
+	"text": "Hello World"
+}
+```
+
+### Sending BCC and CC
+
+You can also send BCC and CC emails by passing an array of eamils, an object with `email` and `name` properties, or an array of either, similar to the `to` parameter.
+
+```json
+{
+	"to": "john@example.com",
+	"from": "me@example.com",
+	"subject": "Hello World",
+	"text": "Hello World",
+	"cc": [
+		"jim@example.com",
+		"rose@example.com"
+	],
+	"bcc": [
+		"gil@example.com"
+	]
+}
+```
+
+### Reply To
+
+You can also specify a reply to email address by adding a `replyTo` parameter to the request. Again, you can use an email string, an object with `email` and `name` properties, or an array of either.
+
+```json
+{
+	"to": "john@example.com",
+	"from": "me@example.com",
+	"replyTo": "support@example.com",
+	"subject": "Hello World",
+	"text": "Hello World"
+}
+```

@@ -1,0 +1,12 @@
+name = "worker-email"
+main = "src/main.ts"
+compatibility_date = "2023-05-18"
+
+# [env.production]
+# TOKEN = "production_value"
+
+# [env.staging]
+# TOKEN = "staging_value"
+
+# [env.shared]
+# TOKEN = "shared_value"
