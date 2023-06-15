@@ -10,7 +10,7 @@
 
 1. Clone this repository
 2. Install the dependencies with `npm install`
-3. Deploy a secure token using `npx wrangler secret put --env production TOKEN` (this will be used to authenticate your requests, and is encrypted on Cloudflare)
+3. Use the command `npx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
 4. Deploy the worker with `npm run deploy`
 
 Or deploy directly to cloudflare
