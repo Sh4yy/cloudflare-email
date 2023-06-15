@@ -10,7 +10,7 @@
 
 1. Clone this repository
 2. Install the dependencies with `npm install`
-3. Add a random `TOKEN` to the `wrangler.toml` file (this will be used to authenticate your requests)
+3. Use the command `npx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
 4. Deploy the worker with `npm run deploy`
 
 Or deploy directly to cloudflare
@@ -33,7 +33,7 @@ This step is optional, but highly recommended. DKIM is a DNS record that helps p
 
 Once you have deployed this worker function to Cloudflare Workers, you can send emails by making a `POST` request to the worker on the `/api/email` endpoint with the following parameters:
 
-- Note you need to pass an `Authorization` header with the `TOKEN` you set in the `wrangler.toml` file. Like the following: `Authorization: TOKEN`
+- Note you need to pass an `Authorization` header with the secure token you deployed. Like the following: `Authorization: TOKEN`
 
 ### Basic Email
 
