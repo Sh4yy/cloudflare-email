@@ -13,7 +13,7 @@
 3. Use the command `npx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
 4. Deploy the worker with `npm run deploy`
 
-Or deploy directly to cloudflare
+Or deploy directly to Cloudflare
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Sh4yy/cloudflare-email)
 
@@ -22,8 +22,16 @@ Or deploy directly to cloudflare
 SPF is a DNS record that helps prevent email spoofing. You will need to add an SPF record to your domain to allow MailChannels to send emails on your behalf.
 
 1. Add a `TXT` record to your domain with the following values:
+
 		- Name: `@`
 		- Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
+
+Note: If you're facing [Domain Lockdown error](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown), follow the below steps:
+
+1. Create a `TXT` record with the following values:
+
+		- Name: `_mailchannels`
+		- Value: `v=mc1 cfid=yourdomain.workers.dev` (the value of `cfid` will also be present in the error response)
 
 ## Setup DKIM
 
