@@ -9,8 +9,10 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230419.0",
     "itty-router": "^4.0.9",
-    "typescript": "^5.0.4",
-    "wrangler": "^3.0.0",
-		"prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "wrangler": "^3.1.1"
   }
 }

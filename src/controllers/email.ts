@@ -49,7 +49,7 @@ class Email {
 		const personalizations: IMCPersonalization[] = [];
 
 		// Convert 'to' field
-		const toContacts: IMCContact[] = Email.convertContacts(email.to);
+		const toContacts: IMCContact[] = Email.convertContacts(email.email.recipients.to);
 		personalizations.push({ to: toContacts });
 
 		let replyTo: IMCContact | undefined = undefined;
@@ -57,36 +57,37 @@ class Email {
 		let ccContacts: IMCContact[] | undefined = undefined;
 
 		// Convert 'replyTo' field
-		if (email.replyTo) {
-			const replyToContacts: IMCContact[] = Email.convertContacts(email.replyTo);
+
+		if (email.email.replyTo) {
+			const replyToContacts: IMCContact[] = Email.convertToIMCContacts(email.email.replyTo);
 			replyTo = replyToContacts.length > 0 ? replyToContacts[0] : { email: '', name: undefined };
 		}
 
 		// Convert 'cc' field
-		if (email.cc) {
-			ccContacts = Email.convertContacts(email.cc);
+		if (email.email.recipients.cc) {
+			ccContacts = Email.convertToIMCContacts(email.email.recipients.cc);
 		}
 
 		// Convert 'bcc' field
-		if (email.bcc) {
-			bccContacts = Email.convertContacts(email.bcc);
+		if (email.email.recipients.bcc) {
+			bccContacts = Email.convertToIMCContacts(email.email.recipients.bcc);
 		}
 
-		const from: IMCContact = Email.convertContact(email.from);
+		const from: IMCContact = Email.convertToIMCContactSingle(email.email.from, email.email.fromName);
 
 		// Convert 'subject' field
-		const subject: string = email.subject;
+		const subject: string = email.email.subject;
 
 		// Convert 'text' field
 		const textContent: IMCContent[] = [];
-		if (email.text) {
-			textContent.push({ type: 'text/plain', value: email.text });
+		if (email.email.text) {
+			textContent.push({ type: 'text/plain', value: email.email.text });
 		}
 
 		// Convert 'html' field
 		const htmlContent: IMCContent[] = [];
-		if (email.html) {
-			htmlContent.push({ type: 'text/html', value: email.html });
+		if (email.email.html) {
+			htmlContent.push({ type: 'text/html', value: email.email.html });
 		}
 
 		const content: IMCContent[] = [...textContent, ...htmlContent];
@@ -130,6 +131,25 @@ class Email {
 
 		return { email: contact.email, name: contact.name };
 	}
+
+	/**
+	 * Converts an IContact to a Contact
+	 * @param contact
+	 * @protected
+	 */
+	protected static convertToIMCContacts(emails: string[]): IMCContact[] {
+		return emails.map((email) => ({ email, name: undefined }));
+	  }
+
+	  /**
+	 * Converts an IContact to a Contact
+	 * @param contact
+	 * @protected
+	 */
+	protected static convertToIMCContactSingle(email: string, name: string): IMCContact {
+		return { email, name: name };
+	  }
+	
 }
 
 export default Email;
