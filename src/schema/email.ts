@@ -6,7 +6,7 @@ const iContactSchema = z.object({
 });
 
 const iEmailRecipientSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   email: z.string(),
 });
 

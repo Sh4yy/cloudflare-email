@@ -17,7 +17,14 @@ router.post<EmailRequest>('/api/email', AuthMiddleware, EmailSchemaMiddleware, a
 		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	return new Response('OK', { status: 200 });
+	return new Response(
+		JSON.stringify({
+			status: 'SUCCESS',
+			statusCode: 1000,
+			message: 'NA',
+		}),
+		{ headers: { 'content-type': 'application/json' }, status: 200 }
+	);
 });
 
 router.all('*', (request) => new Response('Not Found', { status: 404 }));
