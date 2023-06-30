@@ -7,11 +7,11 @@ import { IEmail } from './schema/email';
 const router = Router();
 
 // POST /api/email
-router.post<EmailRequest>('/api/email', AuthMiddleware, EmailSchemaMiddleware, async (request) => {
+router.post<EmailRequest>('/api/email', AuthMiddleware, EmailSchemaMiddleware, async (request, env) => {
 	const email = request.email as IEmail;
 
 	try {
-		await Email.send(email);
+		await Email.send(email, env);
 	} catch (e) {
 		console.error(`Error sending email: ${e}`);
 		return new Response('Internal Server Error', { status: 500 });

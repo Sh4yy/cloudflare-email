@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const iContactSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   email: z.string(),
 });
 
