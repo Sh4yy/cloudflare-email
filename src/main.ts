@@ -14,7 +14,7 @@ router.post<EmailRequest>('/api/email', AuthMiddleware, EmailSchemaMiddleware, a
 		await Email.send(email, env);
 	} catch (e) {
 		console.error(`Error sending email: ${e}`);
-		return new Response('Internal Server Error', { status: 500 });
+		return new Response(`Internal Server Error : ${e}`, { status: 500 });
 	}
 
 	return new Response(
