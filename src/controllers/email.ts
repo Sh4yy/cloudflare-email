@@ -36,24 +36,25 @@ class Email {
 			})
 		);
 
-		let responsePayload = await resp.json();
-		
-
-		// send the response payload as it is in case of failure
+		let responseMessage = JSON.stringify(await resp.json());
+		let responseStatus = "SUCCESS"
+		let responseStatusCode = 1000
+		let responseHttpStatusCode = 200
+	
 		if (resp.status > 299 || resp.status < 200) {
-			return new Response(
-			  JSON.stringify(responsePayload),
-			  {headers: { 'content-type': 'application/json' }, status: resp.status}
-			)
+			responseStatusCode = 9001
+			responseStatus = "ERROR"
+			responseHttpStatusCode = resp.status
 		}
 
 		return new Response(
 			JSON.stringify({
-				status: 'SUCCESS',
-				statusCode: 1000,
-				message: 'NA',
+				status: responseStatus,
+				statusCode: responseStatusCode,
+				message: "NA",
+				apiResponse : responseMessage,
 			}),
-			{ headers: { 'content-type': 'application/json' }, status: 200 }
+			{ headers: { 'content-type': 'application/json' }, status: responseHttpStatusCode }
 		);
 	}
 
