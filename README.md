@@ -35,105 +35,51 @@ Once you have deployed this worker function to Cloudflare Workers, you can send 
 
 - Note you need to pass an `Authorization` header with the secure token you deployed. Like the following: `Authorization: TOKEN`
 
-### Basic Email
-
-The Most basic request would look like this:
-
-```json
-{
-	"to": "john@example.com",
-	"from": "me@example.com",
-	"subject": "Hello World",
-	"text": "Hello World"
-}
-```
-
-### HTML Emails
-
-You can also send HTML emails by adding an `html` parameter to the request. This can be used in conjunction with the `text` parameter to send a multi-part email.
+### Request Body
+Your `api/email` request payload should be structured as follows:
 
 ```json
 {
-	"to": "john@example.com",
-	"from": "me@example.com",
-	"subject": "Hello World",
-	"html": "<h1>Hello World</h1>"
-}
-```
-
-### Sender and Recipient Name
-
-You can also specify a sender and recipient name by adding a `name` parameter to the request. This can be used for both the `to` and `from` parameters.
-
-```json
-{
-	"to": { "email": "john@example.com",  "name": "John Doe" },
-	"from": { "email": "me@example.com", "name": "Jane Doe" },
-	"subject": "Hello World",
-	"text": "Hello World"
-}
-```
-
-### Sending to Multiple Recipients
-
-You may also send to multiple recipients by passing an array of emails, or an array of objects with `email` and `name` properties.
-
-```json
-{
-	"to": [
-		"john@example.com",
-		"rose@example.com"
- 	],
-	"from": "me@example.com",
-	"subject": "Hello World",
-	"text": "Hello World"
-}
-```
-
-or
-
-```json
-{
-	"to": [
-		{ "email": "john@example.com", "name": "John Doe" },
-		{ "email": "rose@example.com", "name": "Rose Doe" }
- 	],
-	"from": "me@example.com",
-	"subject": "Hello World",
-	"text": "Hello World"
-}
-```
-
-### Sending BCC and CC
-
-You can also send BCC and CC emails by passing an array of emails, an object with `email` and `name` properties, or an array of either, similar to the `to` parameter.
-
-```json
-{
-	"to": "john@example.com",
-	"from": "me@example.com",
-	"subject": "Hello World",
-	"text": "Hello World",
-	"cc": [
-		"jim@example.com",
-		"rose@example.com"
-	],
-	"bcc": [
-		"gil@example.com"
-	]
-}
-```
-
-### Reply To
-
-You can also specify a reply to email address by adding a `replyTo` parameter to the request. Again, you can use an email string, an object with `email` and `name` properties, or an array of either.
-
-```json
-{
-	"to": "john@example.com",
-	"from": "me@example.com",
-	"replyTo": "support@example.com",
-	"subject": "Hello World",
-	"text": "Hello World"
+  "email": {
+    "from": "from@email.xyz",
+    "fromName": "John Doe",
+    "replyTo": [
+      "replyone@email.xyz",
+      "replytwo@email.xyz"
+    ],
+    "subject": "email subject",
+    "text": "text body",
+    "html": "html body",
+    "recipients": {
+      "to": [
+        {
+          "name": "Recipient1",
+          "email": "abc12345"
+        },
+        {
+          "name": "Recipient2",
+          "email": "abc@pqr.xyz"
+        }
+      ],
+      "cc": [
+        "recipient_cc1@email.xyz",
+        "recipient_cc2@email.xyz"
+      ],
+      "bcc": [
+        "recipient_bcc1@email.xyz",
+        "recipient_bcc2@email.xyz"
+      ]
+    }
+  },
+  "metadata": {
+    "campaignType": "PROMOTIONAL",
+    "custom": {
+      "key1": "val1",
+      "key2": "val2"
+    },
+    "timestamp": 1521012814,
+    "messageId": "message-id"
+  },
+  "version": "1.0"
 }
 ```
