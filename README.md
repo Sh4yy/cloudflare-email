@@ -13,7 +13,7 @@
 3. Use the command `npx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
 4. Deploy the worker with `npm run deploy`
 
-Or deploy directly to Cloudflare
+Or deploy directly to Cloudflare and set TOKEN from your Cloudflare Dashboad.
 
 [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Sh4yy/cloudflare-email)
 
