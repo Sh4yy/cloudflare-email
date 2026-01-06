@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        env:
+            TOKEN: ${{ secrets.WORKERS_API_TOKEN }}
+            DKIM_DOMAIN: ${{ secrets.DKIM_DOMAIN }}
+            DKIM_SELECTOR: ${{ secrets.DKIM_SELECTOR }}
+            DKIM_PRIVATE_KEY: ${{ secrets.DKIM_PRIVATE_KEY }}
+      - name: print deployment-url
+        env:
+            DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: echo $DEPLOYMENT_URL

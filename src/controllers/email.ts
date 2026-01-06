@@ -1,6 +1,11 @@
 import { IContact, IEmail } from '../schema/email';
 
-type IMCPersonalization = { to: IMCContact[] };
+type IMCPersonalization = { 
+	to: IMCContact[]; 
+	dkim_domain?: string;
+	dkim_selector?: string;
+	dkim_private_key?: string;
+};
 type IMCContact = { email: string; name: string | undefined };
 type IMCContent = { type: string; value: string };
 
@@ -18,10 +23,11 @@ class Email {
 	/**
 	 *
 	 * @param email
+	 * @param env
 	 */
-	static async send(email: IEmail) {
+	static async send(email: IEmail, env: Env) {
 		// convert email to IMCEmail (MailChannels Email)
-		const mcEmail: IMCEmail = Email.convertEmail(email);
+		const mcEmail: IMCEmail = Email.convertEmail(email, env);
 
 		// send email through MailChannels
 		const resp = await fetch(
@@ -36,21 +42,35 @@ class Email {
 
 		// check if email was sent successfully
 		if (resp.status > 299 || resp.status < 200) {
-			throw new Error(`Error sending email: ${resp.status} ${resp.statusText}`);
+			throw new Error(`Error sending email: ${resp.status} ${resp.statusText} ${await resp.text()}`);
 		}
+		console.log(`Email sent: ${resp.status} ${resp.statusText} ${await resp.text()}`)
 	}
 
 	/**
 	 * Converts an IEmail to an IMCEmail
 	 * @param email
+	 * @param env
 	 * @protected
 	 */
-	protected static convertEmail(email: IEmail): IMCEmail {
+	protected static convertEmail(email: IEmail, env: Env): IMCEmail {
 		const personalizations: IMCPersonalization[] = [];
 
 		// Convert 'to' field
 		const toContacts: IMCContact[] = Email.convertContacts(email.to);
-		personalizations.push({ to: toContacts });
+		const personalization: IMCPersonalization = { to: toContacts };
+
+		if (env.DKIM_DOMAIN && env.DKIM_SELECTOR && env.DKIM_PRIVATE_KEY) {
+        	personalization.dkim_domain = env.DKIM_DOMAIN;
+        	personalization.dkim_selector = env.DKIM_SELECTOR;
+        	personalization.dkim_private_key = env.DKIM_PRIVATE_KEY;
+			console.log(`DKIM signing enabled`)
+    	} else {
+			console.log(`DKIM signing disabled, missing environment variables`)
+		}
+
+    	personalizations.push(personalization);
+
 
 		let replyTo: IMCContact | undefined = undefined;
 		let bccContacts: IMCContact[] | undefined = undefined;
