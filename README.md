@@ -12,9 +12,12 @@
 ## Getting Started!
 
 1. Clone this repository
-2. Install the dependencies with `npm install`
-3. Use the command `npx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
-4. Deploy the worker with `npm run deploy`
+2. Install the dependencies with `bun install`
+3. Use the command `bunx wrangler secret put --env production TOKEN` to deploy a securely stored token to Cloudflare. With this command, you will be prompted to enter a random secret value, which will be used to authenticate your requests with the HTTP `Authorization` header as described below. You can also set this encrypted value directly in your Cloudflare dashboard.
+4. (optional) - If you want DKIM then generate your private and public keys following [mailchannels tutorial](https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature) and put your private key into `bunx wrangler secret put --env production DKIM_PRIVATE_KEY` to deploy your key to cloudflare.
+5. (optional) - Modify your domain name in wrangler.toml by changing `DKIM_DOMAIN` to the base domain of your site.
+6. (optional) - If you modified the DKIM selector (the part of the TXT record with the name `<xxxxx>._domainkey` and has `v=DKIM1;p=<long DKIM public key>` as the content) then change `DKIM_SELECTOR` in wrangler.toml to that selector.
+7. Deploy the worker with `bun run deploy`
 
 Or deploy directly to Cloudflare
 

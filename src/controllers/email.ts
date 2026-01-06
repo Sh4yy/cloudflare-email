@@ -1,6 +1,15 @@
+import { marked } from 'marked';
+import sanitize from 'sanitize-html';
 import { IContact, IEmail } from '../schema/email';
 
-type IMCPersonalization = { to: IMCContact[] };
+type IMCPersonalization = {
+	to: IMCContact[];
+	cc?: IMCContact[];
+	bcc?: IMCContact[];
+	dkim_domain?: string;
+	dkim_private_key?: string;
+	dkim_selector?: string;
+};
 type IMCContact = { email: string; name: string | undefined };
 type IMCContent = { type: string; value: string };
 
@@ -8,8 +17,6 @@ interface IMCEmail {
 	personalizations: IMCPersonalization[];
 	from: IMCContact;
 	reply_to: IMCContact | undefined;
-	cc: IMCContact[] | undefined;
-	bcc: IMCContact[] | undefined;
 	subject: string;
 	content: IMCContent[];
 }
@@ -19,9 +26,17 @@ class Email {
 	 *
 	 * @param email
 	 */
-	static async send(email: IEmail) {
+	static async send(email: IEmail, env: Env) {
 		// convert email to IMCEmail (MailChannels Email)
-		const mcEmail: IMCEmail = Email.convertEmail(email);
+		const mcEmail: IMCEmail = await Email.convertEmail(email);
+
+		if (env.DKIM_PRIVATE_KEY && env.DKIM_DOMAIN && env.DKIM_SELECTOR) {
+			mcEmail.personalizations[0].dkim_domain = env.DKIM_DOMAIN;
+			mcEmail.personalizations[0].dkim_private_key = env.DKIM_PRIVATE_KEY;
+			mcEmail.personalizations[0].dkim_selector = env.DKIM_SELECTOR
+		}
+
+		console.log('Sending email:', mcEmail);
 
 		// send email through MailChannels
 		const resp = await fetch(
@@ -36,7 +51,7 @@ class Email {
 
 		// check if email was sent successfully
 		if (resp.status > 299 || resp.status < 200) {
-			throw new Error(`Error sending email: ${resp.status} ${resp.statusText}`);
+			throw new Error(`Error sending email: ${resp.status} ${resp.statusText} ${await resp.text()}`);
 		}
 	}
 
@@ -45,7 +60,7 @@ class Email {
 	 * @param email
 	 * @protected
 	 */
-	protected static convertEmail(email: IEmail): IMCEmail {
+	protected static async convertEmail(email: IEmail): Promise<IMCEmail> {
 		const personalizations: IMCPersonalization[] = [];
 
 		// Convert 'to' field
@@ -65,11 +80,13 @@ class Email {
 		// Convert 'cc' field
 		if (email.cc) {
 			ccContacts = Email.convertContacts(email.cc);
+			personalizations[0].cc = ccContacts;
 		}
 
 		// Convert 'bcc' field
 		if (email.bcc) {
 			bccContacts = Email.convertContacts(email.bcc);
+			personalizations[0].bcc = bccContacts;
 		}
 
 		const from: IMCContact = Email.convertContact(email.from);
@@ -83,6 +100,14 @@ class Email {
 			textContent.push({ type: 'text/plain', value: email.text });
 		}
 
+		// Convert 'markdown' field
+		if (email.markdown) {
+			const html = await marked.parse(email.markdown);
+			const sanitizedHtml = sanitize(html);
+
+			textContent.push({ type: 'text/html', value: sanitizedHtml });
+		}
+
 		// Convert 'html' field
 		const htmlContent: IMCContent[] = [];
 		if (email.html) {
@@ -94,8 +119,6 @@ class Email {
 		return {
 			personalizations,
 			from,
-			cc: ccContacts,
-			bcc: bccContacts,
 			reply_to: replyTo,
 			subject,
 			content,

@@ -3,14 +3,20 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "deploy": "wrangler publish --env production",
+    "deploy": "wrangler deploy --env production",
     "start": "wrangler dev"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230419.0",
+    "@types/sanitize-html": "^2.11.0",
     "itty-router": "^4.0.9",
+    "prettier": "^2.8.8",
     "typescript": "^5.0.4",
-    "wrangler": "^3.0.0",
-		"prettier": "^2.8.8"
+    "wrangler": "^3.52.0"
+  },
+  "dependencies": {
+    "insane": "^2.6.2",
+    "marked": "^12.0.2",
+    "sanitize-html": "^2.13.0"
   }
 }

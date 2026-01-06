@@ -16,6 +16,7 @@ const iEmailSchema = z.object({
 	from: iContactSchema,
 	subject: z.string(),
 	text: z.union([z.string(), z.undefined()]),
+	markdown: z.union([z.string(), z.undefined()]),
 	html: z.union([z.string(), z.undefined()]),
 });
 
