@@ -1,6 +1,7 @@
 name = "worker-email"
 main = "src/main.ts"
-compatibility_date = "2023-05-18"
+compatibility_date = "2025-08-19"
 
 [env.production]
+name = "worker-email"
 
