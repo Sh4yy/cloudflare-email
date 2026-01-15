@@ -1,3 +1,6 @@
+> [!WARNING]
+> [As of August 31, 2024, MailChannels has sunset its free email sending service for Cloudflare Workers users.](https://support.mailchannels.com/hc/en-us/articles/4565898358413-Sending-Email-from-Cloudflare-Workers-using-MailChannels-Email-API).
+
 <div align="center">
 	<img src="https://github.com/Sh4yy/cloudflare-email/assets/23535123/36a28753-7ded-45ef-bfed-fcc308658b33" alt="Cloudflare Worker Email Server"/>
 	<br>
